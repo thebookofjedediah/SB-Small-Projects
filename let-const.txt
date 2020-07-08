@@ -1,0 +1,13 @@
+const PI = 3.14;
+
+What is the difference between var and let?
+-the main difference is that let can be reassigned but not redeclared. 
+
+what is the difference between var and const?
+-var can be reassigned and redeclared but const can not do either.
+
+What is the difference between let and const?
+-let can be reassigned
+
+What is hoisting? 
+-when a window initializes variables prior to going through the code lin-by-line. This happens with var, but not let or const.
