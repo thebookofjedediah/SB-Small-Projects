@@ -1,16 +1,21 @@
-console.log("Let's get this party started!");
 let gifList = document.querySelector('#gifList');
+let searchInput = document.querySelector('#search');
+let searchForm = document.querySelector('form');
 
-async function getGif(search) {
+
+searchForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    let searchValue = searchInput.value;
+    searchInput.value = "";
     const res = await axios.get("http://api.giphy.com/v1/gifs/search", {
     params: {
-      q: search,
+      q: searchValue,
       api_key: "q0lfGgu0xxz8PrmLuTlU5ZLCeXUILS6t",
       limit: 1
     }
   });
   appendGif(res.data);
-}
+})
 
 function appendGif(gifs) {
     let newGif = document.createElement('IMG');
@@ -18,4 +23,4 @@ function appendGif(gifs) {
     gifList.append(newGif);
 }
 
-getGif("funny");
+// getGif("funny");
