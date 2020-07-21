@@ -44,8 +44,6 @@ function populateShows(shows) {
   const $showsList = $("#shows-list");
   $showsList.empty();
 
-  console.log(shows)
-
   for (let show of shows) {
     let $item = $(
       `<div class="col-md-6 col-lg-3 Show" data-show-id="${show.id}">
@@ -54,11 +52,11 @@ function populateShows(shows) {
            <div class="card-body">
              <h5 class="card-title">${show.name}</h5>
              <p class="card-text">${show.summary}</p>
+             <button class="btn btn-primary get-episodes">Episodes</button>
            </div>
          </div>
        </div>
       `);
-      getEpisodes(show.id)
     $showsList.append($item);
   }
 }
@@ -103,6 +101,27 @@ async function getEpisodes(id) {
       number: episode.number,
     }
   })
-  console.log(episodes)
   return episodes;
 }
+
+function populateEpisodes(episodes){
+  const $episodesList = $("#episodes-list");
+  const $episodesArea = $("#episodes-area");
+  $episodesList.empty();
+  for(let episode of episodes){
+    let $item = $(
+      `<li>
+      ${episode.name}
+      (season ${episode.season}, episode ${episode.number})
+      </li>
+      `);
+    $episodesList.append($item);
+  }
+  $episodesArea.show();
+}
+
+$("#shows-list").on("click", ".get-episodes", async function handleEpisodeClick(evt) {
+  let showId = $(evt.target).closest(".Show").data("show-id");
+  let episodes = await getEpisodes(showId);
+  populateEpisodes(episodes);
+});
