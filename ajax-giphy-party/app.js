@@ -1,6 +1,7 @@
 let gifList = document.querySelector('#gifList');
 let searchInput = document.querySelector('#search');
 let searchForm = document.querySelector('form');
+const removeGifs = document.querySelector('#remove');
 
 
 searchForm.addEventListener('submit', async function(e){
@@ -15,6 +16,11 @@ searchForm.addEventListener('submit', async function(e){
     }
   });
   appendGif(res.data);
+})
+
+removeGifs.addEventListener('click', function(e){
+    e.preventDefault();
+    gifList.innerHTML = "";
 })
 
 function appendGif(gifs) {
