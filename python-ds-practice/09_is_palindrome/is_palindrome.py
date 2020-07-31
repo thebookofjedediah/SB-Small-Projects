@@ -21,3 +21,11 @@ def is_palindrome(phrase):
         >>> is_palindrome('Noon')
         True
     """
+    phrase_length = len(phrase)
+    new_phrase = phrase[phrase_length::-1]
+    stripped_phrase = phrase.replace(" ", "")
+    stripped_new_phrase = new_phrase.replace(" ", "")
+    if stripped_phrase.upper() == stripped_new_phrase.upper():
+        return True
+    else:
+        return False
