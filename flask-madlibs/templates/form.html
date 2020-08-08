@@ -2,8 +2,12 @@
 {% block title %} Form {% endblock %}
 
 {% block content %}
+<h1>Madlibs</h1>
     <form action="/story">
-        <p>form stuff</p>
-        <button>submit</button>
+        {% for prompt in prompts %}
+            <label for={{prompt}}>{{prompt.capitalize()}}</label>
+            <input type="text" name={{prompt}} id={{prompt}} class="words" />
+        {% endfor %}
+        <button>STORYTIME</button>
     </form>
 {% endblock %}
