@@ -9,14 +9,32 @@ router.get("/", async function (req, res, next) {
     return res.json(results.rows);
   });
 
-// GET a single companie by code
+// GET a single company by code
 router.get("/:code", async function (req, res, next) {
     try {
-        const { code } = req.params
-        const result = await db.query(
-            `SELECT * FROM companies WHERE code = $1`, [code]
+        let code = req.params.code;
+    
+        const compResult = await db.query(
+             `SELECT code, name, description
+             FROM companies
+             WHERE code = $1`,
+             [code]
         );
-        return res.json(result.rows[0]);
+        const invResult = await db.query(
+             `SELECT id
+             FROM invoices
+             WHERE comp_code = $1`,
+             [code]
+        );
+    
+        if (compResult.rows.length === 0) {
+          throw new ExpressError(`No such company: ${code}`, 404)
+        }
+        const company = compResult.rows[0];
+        const invoices = invResult.rows;
+        company.invoices = invoices.map(inv => inv.id);
+        
+        return res.json({"company": company});
     }
     catch (err) {
         return next(err);
