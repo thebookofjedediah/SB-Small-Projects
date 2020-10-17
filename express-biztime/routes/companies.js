@@ -1,6 +1,7 @@
 const db = require("../db");
 const express = require("express");
 const router = express.Router();
+const slugify = require('slugify')
 
 // GET a list of companies
 router.get("/", async function (req, res, next) {
@@ -44,7 +45,8 @@ router.get("/:code", async function (req, res, next) {
 // POST create a company
 router.post("/", async function (req, res, next) {
     try {
-        const { code, name, description } = req.body;
+        const { name, description } = req.body;
+        let code = slugify(name).toLowerCase();
         const result = await db.query(
             `INSERT INTO companies (code, name, description) 
              VALUES ($1, $2, $3)
