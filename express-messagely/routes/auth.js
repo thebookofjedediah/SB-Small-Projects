@@ -13,22 +13,20 @@ const User = require("../models/user");
  * Make sure to update their last-login!
  *
  **/
-
-//  router.post('/register', async (req, res, next) => {
-//      try {
-//         const { username, password, first_name, last_name, phone } = req.body;
-//         if (!username || !password || !first_name || !last_name || !phone ) {
-//             throw new ExpressError("Please fill out all fields", 400);
-//         }
-//         const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
-//         User.register(username, hashedPassword, first_name, last_name, phone)
-//      } catch (e) {
-//         if (e.code === '23505') {
-//             return next(new ExpressError("Username taken. Please pick a new one", 400))
-//         }
-//         return next(e)
-//      }
-//  })
+router.post('/login', async (req, res, next) => {
+    try {
+        let { username, password } = req.body;
+        if (await User.authenticate(username, password)) {
+            let token = jwt.sign({username}, SECRET_KEY);
+            User.updateLoginTimestamp(username);
+            return res.json({token})
+        } else {
+            throw new ExpressError("Invalid username/password", 400)
+        }
+    } catch (e) {
+        return next(e)
+    }
+})
 
 
 /** POST /register - register user: registers, logs in, and returns token.
@@ -37,5 +35,16 @@ const User = require("../models/user");
  *
  *  Make sure to update their last-login!
  */
+
+router.post('/register', async (req, res, next) => {
+    try {
+       let { username } = await User.register(req.body);
+       let token = jwt.sign({username}, SECRET_KEY);
+       User.updateLoginTimestamp(username);
+       return res.json({token});
+    } catch (e) {
+       return next(e)
+    }
+})
 
  module.exports = router;
